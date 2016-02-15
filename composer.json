@@ -4,7 +4,7 @@
     "description": "The official KodiCMS Api module",
     "homepage":    "http://www.kodicms.ru/",
     "license":     "MIT",
-    "keywords":    ["laravel", "framework", "kodicms", "cms", "module", "usersapi
+    "keywords":    ["laravel", "framework", "kodicms", "cms", "module", "usersapi"],
     "authors": [
         {
             "name":     "Pavel Buchnev",
@@ -23,6 +23,7 @@
         }
     },
     "require": {
-        "kodicms/module-loader": "3.*"
+        "kodicms/module-loader": "3.*",
+        "kodicms/core": "0.*"
     }
 }
