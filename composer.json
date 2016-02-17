@@ -1,21 +1,26 @@
 {
-    "name":        "kodicms/api",
-    "type":        "kodicms-module",
+    "name": "kodicms/api",
+    "type": "kodicms-module",
     "description": "The official KodiCMS Api module",
-    "homepage":    "http://www.kodicms.ru/",
-    "license":     "MIT",
-    "keywords":    ["laravel", "framework", "kodicms", "cms", "module", "usersapi"],
+    "homepage": "http://www.kodicms.ru/",
+    "license": "MIT",
+    "keywords": ["laravel", "framework", "kodicms", "cms", "module", "api"
+    ],
+    "module": {
+        "name": "API",
+        "priority": "-100"
+    },
     "authors": [
         {
-            "name":     "Pavel Buchnev",
-            "email":    "butschster@gmail.com",
+            "name": "Pavel Buchnev",
+            "email": "butschster@gmail.com",
             "homepage": "http://www.kodicms.ru/"
         }
     ],
     "support": {
-        "issues":   "https://github.com/KodiComponents/module-api/issues",
-        "forum":    "http://www.kodicms.ru/forum",
-        "source":   "https://github.com/KodiComponents/module-api"
+        "issues": "https://github.com/KodiComponents/module-api/issues",
+        "forum": "http://www.kodicms.ru/forum",
+        "source": "https://github.com/KodiComponents/module-api"
     },
     "autoload": {
         "psr-4": {
