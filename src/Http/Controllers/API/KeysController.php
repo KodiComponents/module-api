@@ -14,8 +14,8 @@ class KeysController extends Controller
      */
     public function getKeys(ApiKeyRepository $repository)
     {
-        if (! acl_check('api.view_keys')) {
-            throw new PermissionException('api.view_keys');
+        if (\Gate::denies('api::view_keys')) {
+            throw new PermissionException('api::view_keys');
         }
 
         $keys = $repository->getList();
@@ -29,8 +29,8 @@ class KeysController extends Controller
      */
     public function putKey(ApiKeyRepository $repository)
     {
-        if (! acl_check('api.create_keys')) {
-            throw new PermissionException('api.create_keys');
+        if (\Gate::denies('api::create_keys')) {
+            throw new PermissionException('api::create_keys');
         }
 
         $description = $this->getRequiredParameter('description');
@@ -42,8 +42,8 @@ class KeysController extends Controller
      */
     public function deleteKey(ApiKeyRepository $repository)
     {
-        if (! acl_check('api.delete_keys')) {
-            throw new PermissionException('api.delete_keys');
+        if (\Gate::denies('api::delete_keys')) {
+            throw new PermissionException('api::delete_keys');
         }
 
         $key = $this->getRequiredParameter('key');
@@ -60,17 +60,12 @@ class KeysController extends Controller
      */
     public function postRefresh(ApiKeyRepository $repository)
     {
-        if (! acl_check('api.refresh_key')) {
-            throw new PermissionException('api.refresh_key');
+        if (\Gate::denies('api::refresh_key')) {
+            throw new PermissionException('api::refresh_key');
         }
 
         $key = $repository->getSystemKey();
-
-        if (! $repository->isValid($key)) {
-            $key = $repository->generate();
-        } else {
-            $key = $repository->refresh($key);
-        }
+        $key = $repository->refresh($key);
 
         $this->setContent($key);
     }

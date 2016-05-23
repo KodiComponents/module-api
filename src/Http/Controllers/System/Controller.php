@@ -2,31 +2,25 @@
 
 namespace KodiCMS\API\Http\Controllers\System;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesResources;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use KodiCMS\API\Http\Response;
 use Illuminate\Http\JsonResponse;
-use KodiCMS\API\Http\ControllerACL;
 use Illuminate\Http\RedirectResponse;
 use KodiCMS\Support\Traits\Controller as ControllerTrait;
 use KodiCMS\API\Http\Controllers\Controller as BaseController;
-use KodiCMS\Support\Traits\ControllerACL as ControllerACLTrait;
 
 abstract class Controller extends BaseController
 {
-    use ControllerTrait, ControllerACLTrait;
+    use AuthorizesRequests, AuthorizesResources, DispatchesJobs, ValidatesRequests, ControllerTrait;
 
     /**
      * Массив возвращаемых значений, будет преобразован в формат JSON.
      * @var array
      */
     public $responseArray = ['content' => null];
-
-    /**
-     * @return ControllerACLInterface
-     */
-    protected function getControllerAcl()
-    {
-        return new ControllerACL;
-    }
 
     /**
      * Execute an action on the controller.

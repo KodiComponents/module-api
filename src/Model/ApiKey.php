@@ -68,9 +68,9 @@ class ApiKey extends Model
      */
     public function refresh($oldKey)
     {
-        if (is_null($key = static::where('id', $oldKey)->first())) {
-            return false;
-        }
+        $key = static::firstOrNew([
+            'id' => $oldKey
+        ]);
 
         $key->id = Keys::generate();
         $key->save();

@@ -5,24 +5,24 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3">@lang('api::core.title.api_key')</label>
 		<div class="col-md-5">
-			@if (acl_check('api.view_key'))
+			@can('api::view_key')
 			{!!  Form::text(NULL, config('cms.api_key'), [
 				'id' => 'api-key', 'class' => 'form-control', 'readonly'
 			]) !!}
-			@endif
+			@endcan
 		</div>
 		<div class="col-md-3">
-			@if (acl_check('api.refresh_key'))
+            @can('api::refresh_key')
 			{!! Form::button(trans('api::core.buttons.refresh_key'), [
 			'class' => 'btn btn-primary btn-labeled',
 			'id' => 'refresh-api-key',
 			'data-icon' => 'refresh'
 			]) !!}
-			@endif
+			@endcan
 		</div>
 	</div>
 
-	@if (acl_check('api.view_key'))
+    @can('api::view_key')
 	<hr class="panel-wide" />
 
 	<div class="form-group" id="api-keys">
@@ -35,7 +35,7 @@
 						'disabled', 'class' => 'row-value form-control',
 					]) !!}
 
-					@if (acl_check('api.delete_keys'))
+                    @can('api::delete_keys')
 					<div class="input-group-btn">
 					{!! Form::button('', [
 						'data-icon' => 'trash-o',
@@ -49,21 +49,19 @@
 
 			<div class="rows-container"></div>
 
-			@if (acl_check('api.create_keys'))
+            @can('api::create_keys')
 			{!! Form::button('', [
 				'data-icon' => 'plus',
 				'class' => 'add-row btn btn-primary',
 				'data-hotkeys' => 'ctrl+a'
 			]) !!}
-			@endif
+			@endcan
 		</div>
 	</div>
-	@endif
+	@endcan
 </div>
 
-@section('scripts')
-	@parent
-
+@push('scripts')
 <script type="text/javascript">
 	$(function(){
 		$('body').on('click', '#refresh-api-key', function(e) {
@@ -134,4 +132,4 @@
 		}
 	});
 </script>
-@stop
+@endpush

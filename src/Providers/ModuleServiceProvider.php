@@ -7,6 +7,7 @@ use KodiCMS\API\RouteApiFacade;
 use KodiCMS\API\Facades\KeysHelper;
 use KodiCMS\Support\ServiceProvider;
 use KodiCMS\API\Console\Commands\GenerateApiKeyCommand;
+use KodiCMS\Users\Model\Permission;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -18,6 +19,13 @@ class ModuleServiceProvider extends ServiceProvider
         ]);
 
         $this->registerConsoleCommand(GenerateApiKeyCommand::class);
+
+        Permission::register('api', 'api', [
+            'view_keys',
+            'refresh_key',
+            'create_keys',
+            'delete_keys',
+        ]);
     }
 
     public function boot()
