@@ -3,8 +3,8 @@
 namespace KodiCMS\API\Http\Controllers\API;
 
 use KodiCMS\API\Exceptions\Exception;
-use KodiCMS\Api\Repository\ApiKeyRepository;
 use KodiCMS\API\Exceptions\PermissionException;
+use KodiCMS\API\Repository\ApiKeyRepository;
 use KodiCMS\API\Http\Controllers\System\Controller;
 
 class KeysController extends Controller

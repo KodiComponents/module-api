@@ -1,9 +1,9 @@
 <?php
 
-namespace KodiCMS\Api\Repository;
+namespace KodiCMS\API\Repository;
 
 use DatabaseConfig;
-use KodiCMS\Api\Model\ApiKey;
+use KodiCMS\API\Model\ApiKey;
 use KodiCMS\CMS\Repository\BaseRepository;
 
 class ApiKeyRepository extends BaseRepository
@@ -42,8 +42,6 @@ class ApiKeyRepository extends BaseRepository
     public function generate($description = '')
     {
         $key = $this->model->generate($description);
-        $this->putInConfig($key);
-
         return $key;
     }
 
