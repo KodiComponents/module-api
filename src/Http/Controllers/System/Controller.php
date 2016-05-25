@@ -14,7 +14,7 @@ use KodiCMS\API\Http\Controllers\Controller as BaseController;
 
 abstract class Controller extends BaseController
 {
-    use AuthorizesRequests, AuthorizesResources, DispatchesJobs, ValidatesRequests, ControllerTrait;
+    use AuthorizesRequests, AuthorizesResources, DispatchesJobs, ControllerTrait;
 
     /**
      * Массив возвращаемых значений, будет преобразован в формат JSON.

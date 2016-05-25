@@ -2,20 +2,21 @@
 
 namespace KodiCMS\API\Providers;
 
-use Event;
-use KodiCMS\API\RouteApiFacade;
-use KodiCMS\API\Facades\KeysHelper;
-use KodiCMS\Support\ServiceProvider;
+use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use KodiCMS\API\Console\Commands\GenerateApiKeyCommand;
+use KodiCMS\API\Facades\KeysHelper;
+use KodiCMS\API\RouteApiFacade;
+use KodiCMS\Support\ServiceProvider;
 use KodiCMS\Users\Model\Permission;
 
 class ModuleServiceProvider extends ServiceProvider
 {
+
     public function register()
     {
         $this->registerAliases([
             'RouteAPI' => RouteApiFacade::class,
-            'Keys'     => KeysHelper::class,
+            'Keys' => KeysHelper::class,
         ]);
 
         $this->registerConsoleCommand(GenerateApiKeyCommand::class);
@@ -28,9 +29,12 @@ class ModuleServiceProvider extends ServiceProvider
         ]);
     }
 
-    public function boot()
+    /**
+     * @param DispatcherContract $events
+     */
+    public function contextBackend(DispatcherContract $events)
     {
-        Event::listen('view.settings.bottom', function () {
+        $events->listen('view.settings.bottom', function () {
             echo view('api::settings')->render();
         });
     }
