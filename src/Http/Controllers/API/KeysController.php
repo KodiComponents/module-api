@@ -14,7 +14,7 @@ class KeysController extends Controller
      */
     public function getKeys(ApiKeyRepository $repository)
     {
-        if (\Gate::denies('api::view_keys')) {
+        if (\BackendGate::denies('api::view_keys')) {
             throw new PermissionException('api::view_keys');
         }
 
@@ -29,7 +29,7 @@ class KeysController extends Controller
      */
     public function putKey(ApiKeyRepository $repository)
     {
-        if (\Gate::denies('api::create_keys')) {
+        if (\BackendGate::denies('api::create_keys')) {
             throw new PermissionException('api::create_keys');
         }
 
@@ -42,7 +42,7 @@ class KeysController extends Controller
      */
     public function deleteKey(ApiKeyRepository $repository)
     {
-        if (\Gate::denies('api::delete_keys')) {
+        if (\BackendGate::denies('api::delete_keys')) {
             throw new PermissionException('api::delete_keys');
         }
 
@@ -60,7 +60,7 @@ class KeysController extends Controller
      */
     public function postRefresh(ApiKeyRepository $repository)
     {
-        if (\Gate::denies('api::refresh_key')) {
+        if (\BackendGate::denies('api::refresh_key')) {
             throw new PermissionException('api::refresh_key');
         }
 
