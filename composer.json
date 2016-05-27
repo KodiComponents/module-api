@@ -4,8 +4,7 @@
     "description": "The official KodiCMS Api module",
     "homepage": "http://www.kodicms.ru/",
     "license": "MIT",
-    "keywords": ["laravel", "framework", "kodicms", "cms", "module", "api"
-    ],
+    "keywords": ["laravel", "framework", "kodicms", "cms", "module", "api"],
     "module": {
         "name": "API",
         "priority": "-100"
@@ -29,6 +28,8 @@
     },
     "require": {
         "kodicms/module-loader": "3.*",
-        "kodicms/core": "0.*"
+        "kodicms/core": "0.*",
+        "ramsey/uuid": "^3.1",
+        "firebase/php-jwt": "~3.0"
     }
 }

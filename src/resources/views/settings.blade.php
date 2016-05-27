@@ -1,135 +1,94 @@
-<div class="panel-heading" data-icon="flask">
-	<span class="panel-title">@lang('api::core.title.api')</span>
-</div>
-<div class="panel-body api-settings">
-	<div class="form-group">
-		<label class="control-label col-lg-3">@lang('api::core.title.api_key')</label>
-		<div class="col-md-5">
-			@can('api::view_key')
-			{!!  Form::text(NULL, config('cms.api_key'), [
-				'id' => 'api-key', 'class' => 'form-control', 'readonly'
-			]) !!}
-			@endcan
-		</div>
-		<div class="col-md-3">
-            @can('api::refresh_key')
-			{!! Form::button(trans('api::core.buttons.refresh_key'), [
-			'class' => 'btn btn-primary btn-labeled',
-			'id' => 'refresh-api-key',
-			'data-icon' => 'refresh'
-			]) !!}
-			@endcan
-		</div>
-	</div>
+<div class="panel">
+    <div class="panel-heading" data-icon="flask">
+        <span class="panel-title">@lang('api::core.title.api')</span>
+    </div>
+    <div class="panel-body api-settings">
+        <div class="form-group" id="api-keys">
+            <div class="row-helper hidden padding-xs-vr">
+                <div class="input-group">
+                    <span class="input-group-addon api-key bg-success"></span>
+                    {!! Form::text(null, null, [
+                        'disabled', 'class' => 'row-value form-control',
+                    ]) !!}
 
-    @can('api::view_key')
-	<hr class="panel-wide" />
+                    <div class="input-group-btn">
+                        {!! Form::button('', [
+                            'data-icon' => 'trash-o',
+                            'name' => 'trash-row',
+                            'class' => 'btn btn-warning remove-row'
+                        ]) !!}
+                    </div>
+                </div>
+            </div>
 
-	<div class="form-group" id="api-keys">
-		<label class="control-label col-md-3">@lang('api::core.title.api_keys')</label>
-		<div class="col-xs-9">
-			<div class="row-helper hidden padding-xs-vr">
-				<div class="input-group">
-					<span class="input-group-addon api-key bg-success"></span>
-					{!! Form::text(null, null, [
-						'disabled', 'class' => 'row-value form-control',
-					]) !!}
+            <div class="rows-container"></div>
 
-                    @can('api::delete_keys')
-					<div class="input-group-btn">
-					{!! Form::button('', [
-						'data-icon' => 'trash-o',
-						'name' => 'trash-row',
-						'class' => 'btn btn-warning remove-row'
-					]) !!}
-					</div>
-					@endif
-				</div>
-			</div>
-
-			<div class="rows-container"></div>
-
-            @can('api::create_keys')
-			{!! Form::button('', [
-				'data-icon' => 'plus',
-				'class' => 'add-row btn btn-primary',
-				'data-hotkeys' => 'ctrl+a'
-			]) !!}
-			@endcan
-		</div>
-	</div>
-	@endcan
+            {!! Form::button('', [
+                'data-icon' => 'plus',
+                'class' => 'add-row btn btn-primary',
+                'data-hotkeys' => 'ctrl+a'
+            ]) !!}
+        </div>
+    </div>
 </div>
 
 @push('scripts')
 <script type="text/javascript">
-	$(function(){
-		$('body').on('click', '#refresh-api-key', function(e) {
-			e.preventDefault();
+    $(function () {
+        var keys = Api.get('/api.keys', {}, function (response) {
+            var $container = $('#api-keys').removeClass('hidden');
 
-			bootbox.confirm(i18n.t('api.core.messages.are_you_sure'), function(result) {
-				if(!result) return;
+            $container.on('click', '.add-row', function (e) {
+                e.preventDefault();
 
-				Api.post('/api.refresh.key', null, function(response) {
-					$('#api-key').val(response.content);
-				});
-			});
-		});
+                bootbox.prompt(i18n.t('api.core.messages.new_key'), function (result) {
+                    if (result === null) {
+                        return true;
+                    } else if (result.length > 0) {
+                        Api.put('/api.key', {description: result}, function (response) {
+                            if (response.content) {
+                                var $row = clone_row($container);
+                                fill_row($row, response.content);
+                            }
+                        });
 
-		var keys = Api.get('/api.keys', {}, function(response) {
-			var $container = $('#api-keys').removeClass('hidden');
+                        return true;
+                    }
 
-			$container.on('click', '.add-row', function(e) {
-				e.preventDefault();
+                    return false;
+                });
+            });
 
-				bootbox.prompt(i18n.t('api.core.messages.new_key'), function(result) {
-					if(result === null) {
-						return true;
-					} else if (result.length > 0) {
-						Api.put('/api.key', {description: result}, function(response) {
-							if(response.content) {
-								var $row = clone_row($container);
-								fill_row($row, response.content, result);
-							}
-						});
+            $container.on('click', '.remove-row', function (e) {
+                var $cont = $(this).closest('.row-helper');
+                Api.delete('/api.key', {key: $cont.data('id')}, function (response) {
+                    if (response.content) $cont.remove();
+                });
+                e.preventDefault();
+            });
 
-						return true;
-					}
+            for (key in response.content) {
+                var row = clone_row($container);
+                fill_row(row, response.content[key]);
+            }
+        });
 
-					return false;
-				});
-			});
+        function fill_row($row, $key) {
+            var input = $row.find('.row-value');
 
-			$container.on('click', '.remove-row', function(e) {
-				var $cont = $(this).closest('.row-helper');
-				Api.delete('/api.key', {key: $cont.data('id')}, function(response) {
-					if(response.content) $cont.remove();
-				});
-				e.preventDefault();
-			});
+            $row.find('.api-key').text($key.id);
+            input.val($key.name);
+            $row.data('id', $key.id);
+        }
 
-			for(key in response.content) {
-				var row = clone_row($container);
-				fill_row(row, key, response.content[key]);
-			}
-		});
-
-		function fill_row($row, $key, $description) {
-			var input = $row.find('.row-value');
-
-			$row.find('.api-key').text($key);
-			input.val($description);
-			$row.data('id', $key);
-		}
-
-		function clone_row($container) {
-			return $('.row-helper.hidden', $container)
-					.clone()
-					.removeClass('hidden')
-					.appendTo($('.rows-container', $container))
-					.find(':input')
-					.end();
-		}
-	});
+        function clone_row($container) {
+            return $('.row-helper.hidden', $container)
+                    .clone()
+                    .removeClass('hidden')
+                    .appendTo($('.rows-container', $container))
+                    .find(':input')
+                    .end();
+        }
+    });
 </script>
 @endpush

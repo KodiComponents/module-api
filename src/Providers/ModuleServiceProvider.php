@@ -3,11 +3,12 @@
 namespace KodiCMS\API\Providers;
 
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
-use KodiCMS\API\Console\Commands\GenerateApiKeyCommand;
-use KodiCMS\API\Facades\KeysHelper;
-use KodiCMS\API\RouteApiFacade;
+use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Auth;
+use KodiCMS\API\TokenGuard;
 use KodiCMS\Support\ServiceProvider;
 use KodiCMS\Users\Model\Permission;
+use KodiCMS\Users\Model\User;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -15,11 +16,8 @@ class ModuleServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerAliases([
-            'RouteAPI' => RouteApiFacade::class,
-            'Keys' => KeysHelper::class,
+            'RouteAPI' => \KodiCMS\API\RouteApiFacade::class,
         ]);
-
-        $this->registerConsoleCommand(GenerateApiKeyCommand::class);
 
         Permission::register('api', 'api', [
             'view_keys',
@@ -29,13 +27,26 @@ class ModuleServiceProvider extends ServiceProvider
         ]);
     }
 
+    public function boot(Router $router)
+    {
+        $router->middlewareGroup('api', [
+            \KodiCMS\API\Http\Middleware\VerifyApiToken::class,
+        ]);
+
+        Auth::viaRequest('token', function ($request) {
+            return app(TokenGuard::class)->user($request);
+        });
+    }
+
     /**
      * @param DispatcherContract $events
      */
     public function contextBackend(DispatcherContract $events)
     {
-        $events->listen('view.settings.bottom', function () {
-            echo view('api::settings')->render();
+        $events->listen('view.user.edit.footer', function (User $user) {
+            if(backend_auth()->id() == $user->id) {
+                echo view('api::settings', compact('user'))->render();
+            }
         });
     }
 }
