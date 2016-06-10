@@ -6,6 +6,28 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use KodiCMS\Users\Model\User;
 
+/**
+ * KodiCMS\API\Model\Token
+ *
+ * @property string $id
+ * @property integer $user_id
+ * @property string $name
+ * @property string $token
+ * @property string $last_used_at
+ * @property string $expires_at
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property-read \KodiCMS\Users\Model\User $user
+ * @method static \Illuminate\Database\Query\Builder|\KodiCMS\API\Model\Token whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\KodiCMS\API\Model\Token whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\KodiCMS\API\Model\Token whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\KodiCMS\API\Model\Token whereToken($value)
+ * @method static \Illuminate\Database\Query\Builder|\KodiCMS\API\Model\Token whereLastUsedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\KodiCMS\API\Model\Token whereExpiresAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\KodiCMS\API\Model\Token whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\KodiCMS\API\Model\Token whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\KodiCMS\API\Model\Token notExpired()
+ */
 class Token extends Model
 {
     /**
